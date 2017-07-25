@@ -17,3 +17,12 @@ def get_user(username):
         return User.objects.get(username=username)
     except User.DoesNotExist:
         return None
+
+
+def get_slack_username(user):
+    if isinstance(user, str):
+        user = get_user(user)
+
+    backend_data = user_backends_data(user, BACKENDS, Storage)
+    user_social_auth = backend_data.get('associated').first()
+    return '<@{}>'.format(user_social_auth.uid)
