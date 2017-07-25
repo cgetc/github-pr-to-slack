@@ -1,8 +1,22 @@
+from .models import PullReqeustThread
 from .utils import *
 
 
 def pull_request_opened(channel, repository, data):
     pr = data.get('pull_request')
+
+    username = pr.get('user').get('login')
+    user = User.objects.get(username=username)
+    slack = get_slack_client(user)
+    response = slack.chat.post_message(
+        channel, text='{title}\n{html_url}'.format(**pr), as_user=True)
+
+    PullReqeustThread.objects.create(
+        channel=channel,
+        thread=response.body.get('ts'),
+        repository=repository,
+        pull_request=pr.get('number')
+    )
 
 
 def pull_request_edited(channel, repository, data):
