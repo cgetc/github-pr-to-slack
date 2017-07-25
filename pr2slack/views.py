@@ -1,7 +1,15 @@
+import hashlib
+import hmac
+import json
+
+from django.conf import settings
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseForbidden, HttpResponseNotFound
 from django.shortcuts import render, redirect
+from django.views.decorators.csrf import csrf_exempt
 
+from pr2slack import github
 from pr2slack.forms import ProfileForm
 
 
@@ -31,3 +39,31 @@ def update_profile(req):
     return render(req, 'accounts/profile.html', {
         'form': form,
     })
+
+
+@csrf_exempt
+def github_hooks(req, repo):
+    if req.method != 'POST':
+        return HttpResponseBadRequest(req)
+
+    try:
+        secret = settings.GITHUB_REPO_SECRETS[repo]
+    except KeyError:
+        return HttpResponseNotFound(req)
+
+    signature = hmac.new(secret, req.body, hashlib.sha1).hexdigest()
+    if signature != req.META['HTTP_X_HUB_SIGNATURE'][5:]:
+        return HttpResponseForbidden(req)
+
+    event = req.META['HTTP_X_GITHUB_EVENT']
+    data = json.loads(req.body.decode('utf8'))
+    action = data.get('action')
+    try:
+        handler = getattr(github, '{}_{}'.format(event, action) if action else event)
+    except AttributeError:
+        pass
+    else:
+        if callable(handler):
+            handler(data)
+
+    return HttpResponse(req, '', status=204)

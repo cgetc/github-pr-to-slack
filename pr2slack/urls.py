@@ -23,5 +23,6 @@ urlpatterns = [
     url('', include('social_django.urls', namespace='social')),
     url(r'^logout/$', views.logout, name='logout'),
     url(r'^accounts/profile/$', views.update_profile, name='accounts_profile'),
+    url(r'^github/(?P<repo>[0-9a-zA-Z\-]+)/$', views.github_hooks, name='github_hooks'),
     url(r'^$', views.index, name='index'),
 ]
