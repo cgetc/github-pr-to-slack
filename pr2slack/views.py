@@ -42,12 +42,14 @@ def update_profile(req):
 
 
 @csrf_exempt
-def github_hooks(req, repo):
+def github_hooks(req, channel):
     if req.method != 'POST':
         return HttpResponseBadRequest(req)
 
+    data = json.loads(req.body.decode('utf8'))
+    repository = data.get('repository').get('name')
     try:
-        secret = settings.GITHUB_REPO_SECRETS[repo]
+        secret = settings.GITHUB_REPO_SECRETS[repository]
     except KeyError:
         return HttpResponseNotFound(req)
 
@@ -56,7 +58,6 @@ def github_hooks(req, repo):
         return HttpResponseForbidden(req)
 
     event = req.META['HTTP_X_GITHUB_EVENT']
-    data = json.loads(req.body.decode('utf8'))
     action = data.get('action')
     try:
         handler = getattr(github, '{}_{}'.format(event, action) if action else event)
@@ -64,6 +65,6 @@ def github_hooks(req, repo):
         pass
     else:
         if callable(handler):
-            handler(data)
+            handler(channel, repository, data)
 
     return HttpResponse(req, '', status=204)

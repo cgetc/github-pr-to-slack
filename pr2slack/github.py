@@ -1,53 +1,57 @@
 from .utils import *
 
 
-def pull_request_opened(data):
+def pull_request_opened(channel, repository, data):
     pr = data.get('pull_request')
 
 
-def pull_request_edited(data):
+def pull_request_edited(channel, repository, data):
     pr = data.get('pull_request')
 
 
-def pull_request_closed(data):
+def pull_request_closed(channel, repository, data):
     pr = data.get('pull_request')
 
 
-def pull_request_assigned(data):
+def pull_request_assigned(channel, repository, data):
     pr = data.get('pull_request')
 
 
-def pull_request_unassigned(data):
+def pull_request_unassigned(channel, repository, data):
     pr = data.get('pull_request')
 
 
-def pull_request_review_requested(data):
+def pull_request_synchronize(data):
     pr = data.get('pull_request')
 
 
-def pull_request_review_request_removed(data):
+def pull_request_review_requested(channel, repository, data):
     pr = data.get('pull_request')
 
 
-def pull_request_review_submitted(data):
+def pull_request_review_request_removed(channel, repository, data):
     pr = data.get('pull_request')
 
 
-def pull_request_review_edited(data):
+def pull_request_review_submitted(channel, repository, data):
     pr = data.get('pull_request')
 
 
-def pull_request_review_dismissed(data):
+def pull_request_review_edited(channel, repository, data):
     pr = data.get('pull_request')
 
 
-def pull_request_comment_created(data):
+def pull_request_review_dismissed(channel, repository, data):
     pr = data.get('pull_request')
 
 
-def pull_request_comment_edited(data):
+def pull_request_comment_created(channel, repository, data):
     pr = data.get('pull_request')
 
 
-def pull_request_comment_deleted(data):
+def pull_request_comment_edited(channel, repository, data):
+    pr = data.get('pull_request')
+
+
+def pull_request_comment_deleted(channel, repository, data):
     pr = data.get('pull_request')
