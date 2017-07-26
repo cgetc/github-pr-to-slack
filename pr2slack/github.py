@@ -29,13 +29,13 @@ def pull_request_closed(channel, repository, data):
         repository=repository,
         pull_request=pr.get('number'),
     ).thread
-    reviewer = get_slack_username(pr.get('assignee').get('login'))
+    reviewer = (pr.get('assignee') or {}).get('login')
 
     username = pr.get('user').get('login')
     user = User.objects.get(username=username)
     slack = get_slack_client(user)
     slack.chat.post_message(channel,
-                            text='{} マージしました。'.format(reviewer),
+                            text=message_with_mention('マージしました。', reviewer),
                             thread_ts=thread_ts,
                             as_user=True
                             )
@@ -52,13 +52,11 @@ def pull_request_assigned(channel, repository, data):
     username = pr.get('user').get('login')
     if reviewer == username:
         return
-    else:
-        reviewer = get_slack_username(reviewer)
 
     user = User.objects.get(username=username)
     slack = get_slack_client(user)
     slack.chat.post_message(channel,
-                            text='{} レビューお願いします。'.format(reviewer),
+                            text=message_with_mention('レビューお願いします。', reviewer),
                             thread_ts=thread_ts,
                             as_user=True
                             )

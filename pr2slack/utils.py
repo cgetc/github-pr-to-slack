@@ -23,6 +23,14 @@ def get_slack_username(user):
     if isinstance(user, str):
         user = get_user(user)
 
+    if user is None:
+        return None
+
     backend_data = user_backends_data(user, BACKENDS, Storage)
     user_social_auth = backend_data.get('associated').first()
     return '<@{}>'.format(user_social_auth.uid)
+
+
+def message_with_mention(message, user):
+    username = get_slack_username(user)
+    return '{} {}'.format(username, message) if username else message
