@@ -22,7 +22,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -173,6 +173,10 @@ AUTHENTICATION_BACKENDS = (
     'social_core.backends.slack.SlackOAuth2',
     'django.contrib.auth.backends.ModelBackend',
 )
+
+SOCIAL_AUTH_SLACK_KEY = os.environ.get('SOCIAL_AUTH_SLACK_KEY')
+SOCIAL_AUTH_SLACK_SECRET = os.environ.get('SOCIAL_AUTH_SLACK_SECRET')
+SOCIAL_AUTH_SLACK_TEAM = os.environ.get('SOCIAL_AUTH_SLACK_TEAM')
 
 try:
     from .local_settings import *
