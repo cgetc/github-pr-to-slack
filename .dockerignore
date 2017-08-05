@@ -1,0 +1,5 @@
+README.md
+db.sqlite3
+local_settings.py
+.python-version
+.gitignore
