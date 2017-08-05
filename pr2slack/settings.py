@@ -171,6 +171,7 @@ SOCIAL_AUTH_PIPELINE = (
 
 AUTHENTICATION_BACKENDS = (
     'social_core.backends.slack.SlackOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
 )
 
 try:

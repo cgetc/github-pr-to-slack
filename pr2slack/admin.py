@@ -1,3 +1,6 @@
 from django.contrib import admin
 
-# Register your models here.
+from pr2slack.models import GithubSecret
+
+
+admin.site.register(GithubSecret)

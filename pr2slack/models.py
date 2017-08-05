@@ -13,3 +13,11 @@ class PullReqeustThread(models.Model):
             ('channel', 'thread'),
             ('repository', 'pull_request'),
         )
+
+
+class GithubSecret(models.Model):
+    repository = models.TextField(unique=True)
+    secret = models.TextField()
+
+    class Meta:
+        db_table = 'p2t_github_secret'

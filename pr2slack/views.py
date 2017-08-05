@@ -11,6 +11,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from pr2slack import github
 from pr2slack.forms import ProfileForm
+from pr2slack.models import GithubSecret
 
 
 def index(req):
@@ -49,8 +50,8 @@ def github_hooks(req, channel):
     data = json.loads(req.body.decode('utf8'))
     repository = data.get('repository').get('name')
     try:
-        secret = settings.GITHUB_REPO_SECRETS[repository]
-    except KeyError:
+        secret = GithubSecret.objects.get(repository=repository).secret
+    except GithubSecret.DoesNotExist:
         return HttpResponseNotFound(req)
 
     signature = hmac.new(secret, req.body, hashlib.sha1).hexdigest()
