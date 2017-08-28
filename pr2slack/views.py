@@ -50,7 +50,7 @@ def github_hooks(req, channel):
     data = json.loads(req.body.decode('utf8'))
     repository = data.get('repository').get('name')
     try:
-        secret = GithubSecret.objects.get(repository=repository).secret
+        secret = GithubSecret.objects.get(repository=repository).binary_secret
     except GithubSecret.DoesNotExist:
         return HttpResponseNotFound(req)
 

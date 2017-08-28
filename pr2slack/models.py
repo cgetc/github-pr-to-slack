@@ -21,3 +21,7 @@ class GithubSecret(models.Model):
 
     class Meta:
         db_table = 'p2t_github_secret'
+
+    @property
+    def binary_secret(self):
+        return self.secret.encode('utf-8')
