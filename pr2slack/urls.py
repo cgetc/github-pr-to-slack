@@ -25,6 +25,6 @@ urlpatterns = [
     url('', include('social_django.urls', namespace='social')),
     url(r'^logout/$', views.logout, name='logout'),
     url(r'^accounts/profile/$', views.update_profile, name='accounts_profile'),
-    url(r'^slack/(?P<channel>[0-9a-zA-Z_]+)/$', views.github_hooks, name='github_hooks'),
+    url(r'^slack/(?P<channel>[0-9a-zA-Z_\-]+)/$', views.github_hooks, name='github_hooks'),
     url(r'^$', views.index, name='index'),
 ]
