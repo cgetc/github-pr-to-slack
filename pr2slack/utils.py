@@ -4,6 +4,8 @@ from social_django.utils import BACKENDS, Storage
 
 from slacker import Slacker
 
+from pr2slack.models import PullReqeustThread
+
 
 def get_slack_client(user):
     backend_data = user_backends_data(user, BACKENDS, Storage)
@@ -34,3 +36,24 @@ def get_slack_username(user):
 def message_with_mention(message, user):
     username = get_slack_username(user)
     return '{} {}'.format(username, message) if username else message
+
+
+def post_message(channel, repository, data, message):
+    pr = data.get('pull_request')
+    thread_ts = PullReqeustThread.objects.get(
+        repository=repository,
+        pull_request=pr.get('number'),
+    ).thread
+
+    sender = data.get('sender').get('login')
+    mention = data.get('user').get('login')
+    if sender == mention:
+        return
+
+    user = User.objects.get(username=sender)
+    slack = get_slack_client(user)
+    slack.chat.post_message(channel,
+                            text=message_with_mention(message, mention),
+                            thread_ts=thread_ts,
+                            as_user=True
+                            )
